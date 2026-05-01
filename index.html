@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error ::ERROR_CODE:: | Oops!</title>
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #ff00ff;
+            --bg: #0a0a12;
+            --text: #e0e0e0;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: rgba(20, 20, 30, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 3rem 4rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            max-width: 90vw;
+            pointer-events: none; /* Let canvas handle hover if needed, but container needs some pointer events */
+        }
+        .container * {
+            pointer-events: auto;
+        }
+        h1 {
+            font-size: 6rem;
+            margin: 0;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.3));
+            line-height: 1;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin: 10px 0 20px;
+            color: #fff;
+        }
+        p.joke {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+        .cf-info {
+            display: inline-block;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: #00ffcc;
+            border: 1px dashed rgba(0, 255, 204, 0.3);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            min-width: 250px;
+        }
+        .cf-info::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.1), transparent);
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            100% { left: 200%; }
+        }
+        .cf-info span {
+            color: #fff;
+            float: right;
+            margin-left: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary);
+            z-index: -1;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        }
+        .btn:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #666;
+            letter-spacing: 1px;
+        }
+        .signature {
+            color: var(--secondary);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .signature:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--secondary);
+            transform: scale(1.1);
+        }
+        
+        /* Glitch effect on hover for the error code */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch-wrapper:hover h1 {
+            animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+            cursor: crosshair;
+        }
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-3px, 3px) }
+            40% { transform: translate(-3px, -3px) }
+            60% { transform: translate(3px, 3px) }
+            80% { transform: translate(3px, -3px) }
+            100% { transform: translate(0) }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    
+    <div class="container" id="card">
+        <div class="glitch-wrapper">
+            <h1>::ERROR_CODE::</h1>
+        </div>
+        <h2>Connection Interrupted</h2>
+        
+        <p class="joke" id="joke-text">
+            Our hamsters powering the server just went on strike. 🐹 Don't panic, we're negotiating with sunflower seeds.
+        </p>
+        
+        <div class="cf-info">
+            <div>Ray ID: <span>::RAY_ID::</span></div>
+            <div>Your IP: <span>::CLIENT_IP::</span></div>
+            <div>Location: <span>::GEO::</span></div>
+            <div>Status: <span>::ERROR_MESSAGE::</span></div>
+        </div>
+        <br>
+        <div>
+            <a href="javascript:location.reload();" class="btn" id="refresh-btn">Beam Me Up, Scotty!</a>
+        </div>
+        
+        <div class="footer">
+            Designed with <span style="color:#ff3366">❤️</span> & caffeine by <span class="signature">NetLops</span>
+        </div>
+    </div>
+
+    <script>
+        // 3D Tilt Effect on Card
+        const card = document.getElementById('card');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Interactive Particle Network Background
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        const mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener('mouseout', function() {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+                this.baseX = this.x;
+                this.baseY = this.y;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+
+                // Interactive repulse
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                if (mouse.x != null && distance < mouse.radius) {
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
+                    const maxDistance = mouse.radius;
+                    const force = (maxDistance - distance) / maxDistance;
+                    const directionX = forceDirectionX * force * 5;
+                    const directionY = forceDirectionY * force * 5;
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx/20;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy/20;
+                    }
+                }
+
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 10000;
+            if (numberOfParticles > 150) numberOfParticles = 150;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 1) - 0.5;
+                let directionY = (Math.random() * 1) - 0.5;
+                let color = Math.random() > 0.5 ? '#00ffcc' : '#ff00ff';
+                
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    
+                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                        opacityValue = 1 - (distance / 20000);
+                        ctx.strokeStyle = `rgba(100, 200, 255, ${opacityValue * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+
+        // Random Funny Jokes
+        const jokes = [
+            "Our hamsters powering the server just went on strike. 🐹 Don't panic, we're negotiating with sunflower seeds.",
+            "A wild alien spaceship abducted our server. 🛸 We've dispatched Will Smith to get it back.",
+            "You've ventured into the deep void of the internet. 🌌 Watch out for the digital black holes!",
+            "Oops, looks like someone spilled coffee on the motherboard again. ☕ Sparks are flying!",
+            "The matrix has a glitch. 🐈‍⬛ Déjà vu? Try refreshing the page.",
+            "We fired the developer who caused this. Just kidding, we're just making them fix it while they cry. 😭",
+            "This page is playing hide and seek. 🙈 And it's winning."
+        ];
+        
+        document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random() * jokes.length)];
+
+        // Local Preview Mocking (so it doesn't look broken when viewed locally without CF)
+        document.querySelectorAll('.cf-info span').forEach(el => {
+            if(el.innerText.includes('::')) {
+                const token = el.innerText;
+                if(token === '::RAY_ID::') el.innerText = '7x8y9z0a1b2c3d4e';
+                if(token === '::CLIENT_IP::') el.innerText = '127.0.0.1';
+                if(token === '::GEO::') el.innerText = 'Earth, Milky Way';
+                if(token === '::ERROR_MESSAGE::') el.innerText = 'Unknown Anomaly';
+            }
+        });
+        const h1 = document.querySelector('h1');
+        if(h1.innerText === '::ERROR_CODE::') h1.innerText = '502';
+    </script>
+</body>
+</html>
