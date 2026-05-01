@@ -131,7 +131,7 @@
         </div>
         
         <div class="footer" id="footer-text">
-            Border Control Agent: NetLops
+            Border Control Agent: <a href="https://github.com/netlops" target="_blank" style="color: inherit; text-decoration: none;">NetLops</a>
         </div>
     </div>
 
@@ -142,14 +142,14 @@
                 ip: "Traveler IP", geo: "Origin Region", ray: "Visa ID (Ray)", status: "Remarks",
                 stamp: "ACCESS DENIED",
                 joke: "Your region is not allowed to cross this border. Please check your travel documents.",
-                footer: "Border Control Agent: NetLops"
+                footer: "Border Control Agent: <a href='https://github.com/netlops' target='_blank' style='color: inherit; text-decoration: none;'>NetLops</a>"
             },
             zh: {
                 title: "海关安检 / 边境控制",
                 ip: "旅客 IP", geo: "来源地盘", ray: "签证编号", status: "拦截备注",
                 stamp: "禁止入境",
                 joke: "此路是我开，此树是我栽。兄弟，你这地界的 IP 咱村不让进啊，赶紧用个魔法工具吧！",
-                footer: "边防大队：NetLops"
+                footer: "边防大队：<a href='https://github.com/netlops' target='_blank' style='color: inherit; text-decoration: none;'>NetLops</a>"
             }
         };
 
@@ -163,7 +163,7 @@
         document.getElementById('lbl-status').innerText = t.status;
         document.getElementById('stamp-text').innerText = t.stamp;
         document.getElementById('joke-text').innerText = t.joke;
-        document.getElementById('footer-text').innerText = t.footer;
+        document.getElementById('footer-text').innerHTML = t.footer;
 
         // Mocking
         document.querySelectorAll('.cf-val').forEach(el => {

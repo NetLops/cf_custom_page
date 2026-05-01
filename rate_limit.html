@@ -113,7 +113,7 @@
     </div>
     
     <div class="footer" id="footer-text">
-        Zen Master: NetLops
+        Zen Master: <a href="https://github.com/netlops" target="_blank" style="color: inherit; text-decoration: none;">NetLops</a>
     </div>
 
     <script>
@@ -122,14 +122,14 @@
                 title: "Rate Limited",
                 joke: "You're clicking too fast! Take a deep breath, count to three, and let the servers catch up with your incredible speed.",
                 btn: "Refresh Gently",
-                footer: "Zen Master: NetLops",
+                footer: "Zen Master: <a href='https://github.com/netlops' target='_blank' style='color: inherit; text-decoration: none;'>NetLops</a>",
                 breatheIn: "Inhale", breatheOut: "Exhale"
             },
             zh: {
                 title: "哎哟，太快了",
                 joke: "小伙子手速太快了，把鼠标都点冒烟了，服务器直呼受不了。来，喝口茶，跟着上面的圆圈深呼吸三次再试...",
                 btn: "温柔地刷新",
-                footer: "首席按摩师：NetLops",
+                footer: "首席按摩师：<a href='https://github.com/netlops' target='_blank' style='color: inherit; text-decoration: none;'>NetLops</a>",
                 breatheIn: "吸气", breatheOut: "呼气"
             }
         };
@@ -140,7 +140,7 @@
         document.getElementById('title-text').innerText = t.title;
         document.getElementById('joke-text').innerText = t.joke;
         document.getElementById('btn-refresh').innerText = t.btn;
-        document.getElementById('footer-text').innerText = t.footer;
+        document.getElementById('footer-text').innerHTML = t.footer;
 
         // Breathe logic
         const circleText = document.getElementById('breathe-text');
