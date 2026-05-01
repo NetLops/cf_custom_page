@@ -32,8 +32,8 @@ Cloudflare requires specific mandatory tokens for certain page types. **If these
 | **IP / Country Challenge** | `::CAPTCHA_BOX::` | **Must be visible** |
 | **Interactive Challenge** | `::CAPTCHA_BOX::` | **Must be visible** |
 | **WAF Challenge** | `::CAPTCHA_BOX::` | **Must be visible** |
-| **Managed Challenge (Under Attack)** | `::IM_UNDER_ATTACK_BOX::` | **Must be visible** |
-| **Non-interactive Challenge** | `::IM_UNDER_ATTACK_BOX::` | **Must be visible** |
+| **Managed Challenge (Under Attack)** | `::CAPTCHA_BOX::` | **Must be visible** |
+| **Non-interactive Challenge** | `::CAPTCHA_BOX::` | **Must be visible** |
 | **WAF Block, IP Block, Rate Limit** | *(Usually none required)* | N/A |
 
 ### Optional Informational Tokens:

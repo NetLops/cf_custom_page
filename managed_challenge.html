@@ -118,7 +118,8 @@
         </div>
 
         <div class="challenge-container">
-            ::IM_UNDER_ATTACK_BOX::
+            ::CAPTCHA_BOX::
+            <div style="display: none;">::IM_UNDER_ATTACK_BOX::</div>
         </div>
         
         <div class="footer">
@@ -158,9 +159,9 @@
             }
         });
         
-        // Mock IM_UNDER_ATTACK box locally
+        // Mock CAPTCHA box locally
         const challengeBox = document.querySelector('.challenge-container');
-        if (challengeBox.innerHTML.includes('::IM_UNDER_ATTACK_BOX::')) {
+        if (challengeBox.innerHTML.includes('::CAPTCHA_BOX::')) {
             challengeBox.innerHTML = '<div style="color: #333; font-family: sans-serif; font-size: 0.9rem;">[ Cloudflare Under Attack Widget Will Render Here ]</div>';
         }
     </script>
