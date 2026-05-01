@@ -47,7 +47,7 @@
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
             max-width: 90vw;
-            pointer-events: none; /* Let canvas handle hover if needed, but container needs some pointer events */
+            pointer-events: none;
         }
         .container * {
             pointer-events: auto;
@@ -71,7 +71,7 @@
             font-size: 1.2rem;
             color: #aaa;
             margin-bottom: 30px;
-            max-width: 400px;
+            max-width: 420px;
             margin-left: auto;
             margin-right: auto;
             line-height: 1.5;
@@ -89,7 +89,7 @@
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
-            min-width: 250px;
+            min-width: 300px;
         }
         .cf-info::before {
             content: '';
@@ -102,9 +102,16 @@
         @keyframes scan {
             100% { left: 200%; }
         }
-        .cf-info span {
+        .cf-info .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .cf-info .info-row:last-child {
+            margin-bottom: 0;
+        }
+        .cf-info .val {
             color: #fff;
-            float: right;
             margin-left: 20px;
         }
         .btn {
@@ -159,8 +166,6 @@
             text-shadow: 0 0 10px var(--primary), 0 0 20px var(--secondary);
             transform: scale(1.1);
         }
-        
-        /* Glitch effect on hover for the error code */
         .glitch-wrapper {
             position: relative;
             display: inline-block;
@@ -184,19 +189,29 @@
     
     <div class="container" id="card">
         <div class="glitch-wrapper">
-            <h1>::ERROR_CODE::</h1>
+            <h1 id="error-code">::ERROR_CODE::</h1>
         </div>
-        <h2>Connection Interrupted</h2>
+        <h2 id="page-title">Connection Interrupted</h2>
         
-        <p class="joke" id="joke-text">
-            Our hamsters powering the server just went on strike. 🐹 Don't panic, we're negotiating with sunflower seeds.
-        </p>
+        <p class="joke" id="joke-text"></p>
         
         <div class="cf-info">
-            <div>Ray ID: <span>::RAY_ID::</span></div>
-            <div>Your IP: <span>::CLIENT_IP::</span></div>
-            <div>Location: <span>::GEO::</span></div>
-            <div>Status: <span>::ERROR_MESSAGE::</span></div>
+            <div class="info-row">
+                <span id="label_ray">Ray ID:</span> 
+                <span class="val">::RAY_ID::</span>
+            </div>
+            <div class="info-row">
+                <span id="label_ip">Your IP:</span> 
+                <span class="val">::CLIENT_IP::</span>
+            </div>
+            <div class="info-row">
+                <span id="label_geo">Location:</span> 
+                <span class="val">::GEO::</span>
+            </div>
+            <div class="info-row">
+                <span id="label_status">Status:</span> 
+                <span class="val">::ERROR_MESSAGE::</span>
+            </div>
         </div>
         <br>
         <div>
@@ -204,12 +219,102 @@
         </div>
         
         <div class="footer">
-            Designed with <span style="color:#ff3366">❤️</span> & caffeine by <span class="signature">NetLops</span>
+            <span id="label_footer">Designed with <span style="color:#ff3366">❤️</span> & caffeine by</span> <span class="signature">NetLops</span>
         </div>
     </div>
 
     <script>
-        // 3D Tilt Effect on Card
+        // --- i18n & Error Type Logic ---
+        const i18n = {
+            en: {
+                title_default: "Connection Interrupted",
+                title_waf: "WAF Blocked",
+                title_challenge: "Interactive Challenge",
+                title_ratelimit: "Rate Limited",
+                label_ray: "Ray ID:",
+                label_ip: "Your IP:",
+                label_geo: "Location:",
+                label_status: "Status:",
+                btn_refresh: "Beam Me Up, Scotty!",
+                footer_html: `Designed with <span style="color:#ff3366">❤️</span> & caffeine by`,
+                jokes: [
+                    "Our hamsters powering the server just went on strike. 🐹 Don't panic, we're negotiating with sunflower seeds.",
+                    "A wild alien spaceship abducted our server. 🛸 We've dispatched Will Smith to get it back.",
+                    "You've ventured into the deep void of the internet. 🌌 Watch out for the digital black holes!",
+                    "Oops, looks like someone spilled coffee on the motherboard again. ☕ Sparks are flying!",
+                    "The matrix has a glitch. 🐈‍⬛ Déjà vu? Try refreshing the page.",
+                    "We fired the developer who caused this. Just kidding, we're just making them fix it while they cry. 😭",
+                    "This page is playing hide and seek. 🙈 And it's winning."
+                ]
+            },
+            zh: {
+                title_default: "艾玛，连接断了",
+                title_waf: "被防火墙大爷拦住了 (WAF)",
+                title_challenge: "人机验证挑战",
+                title_ratelimit: "你点太快啦，歇会儿",
+                label_ray: "请求溯源 (Ray ID):",
+                label_ip: "你的门牌号 (IP):",
+                label_geo: "你的地界 (Location):",
+                label_status: "当前状态 (Status):",
+                btn_refresh: "赶紧滴，重新加载！",
+                footer_html: `用 <span style="color:#ff3366">❤️</span> 和枸杞水打造，署名`,
+                jokes: [
+                    "俺们村的服务器被外星人拐跑了。🛸 别慌，全村正抄家伙去追呢。",
+                    "机房的仓鼠大爷罢工啦！🐹 我们正拿上好的葵花籽在哄着呢。",
+                    "这波啊，这波是网络大爆炸！🌌 小心别掉进代码黑洞里了。",
+                    "哎呀妈呀，哪个倒霉蛋又把咖啡撒主板上了？☕ 滋滋冒火星子！",
+                    "程序员老哥正在疯狂砸键盘。😭 稍安勿躁，他一边哭一边修呢。",
+                    "这页面搁这儿跟你躲猫猫呢。🙈 显然它赢了。",
+                    "网络线路大概率是被王大爷的拖拉机压断了。🚜 正在紧急抢修！"
+                ]
+            }
+        };
+
+        const userLang = navigator.language || navigator.userLanguage;
+        const lang = userLang.toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('label_ray').innerText = t.label_ray;
+        document.getElementById('label_ip').innerText = t.label_ip;
+        document.getElementById('label_geo').innerText = t.label_geo;
+        document.getElementById('label_status').innerText = t.label_status;
+        document.getElementById('refresh-btn').innerText = t.btn_refresh;
+        document.getElementById('label_footer').innerHTML = t.footer_html;
+        document.getElementById('joke-text').innerText = t.jokes[Math.floor(Math.random() * t.jokes.length)];
+
+        // Local Preview Mocking (so it doesn't look broken when viewed locally without CF)
+        document.querySelectorAll('.cf-info .val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                const token = el.innerText;
+                if(token === '::RAY_ID::') el.innerText = '7x8y9z0a1b2c3d4e';
+                if(token === '::CLIENT_IP::') el.innerText = '127.0.0.1';
+                if(token === '::GEO::') el.innerText = 'Earth, Milky Way';
+                if(token === '::ERROR_MESSAGE::') el.innerText = 'Unknown Anomaly';
+            }
+        });
+        const h1 = document.getElementById('error-code');
+        let codeStr = h1.innerText;
+        if(codeStr === '::ERROR_CODE::') {
+            // Randomly mock a code for local viewing
+            const mockCodes = ['403', '429', '500', '502', '1020'];
+            codeStr = mockCodes[Math.floor(Math.random() * mockCodes.length)];
+            h1.innerText = codeStr;
+        }
+
+        // Determine Page Type based on ERROR_CODE or ERROR_MESSAGE
+        let titleText = t.title_default;
+        const errMsg = document.querySelectorAll('.cf-info .val')[3].innerText.toLowerCase();
+        
+        if (codeStr === '403' || errMsg.includes('waf') || errMsg.includes('block')) {
+            titleText = t.title_waf;
+        } else if (codeStr === '429' || errMsg.includes('rate limit')) {
+            titleText = t.title_ratelimit;
+        } else if (errMsg.includes('challenge') || errMsg.includes('attack mode')) {
+            titleText = t.title_challenge;
+        }
+        document.getElementById('page-title').innerText = titleText;
+
+        // --- 3D Tilt Effect on Card ---
         const card = document.getElementById('card');
         document.addEventListener('mousemove', (e) => {
             const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
@@ -217,7 +322,7 @@
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
-        // Interactive Particle Network Background
+        // --- Interactive Particle Network Background ---
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -346,32 +451,6 @@
 
         init();
         animate();
-
-        // Random Funny Jokes
-        const jokes = [
-            "Our hamsters powering the server just went on strike. 🐹 Don't panic, we're negotiating with sunflower seeds.",
-            "A wild alien spaceship abducted our server. 🛸 We've dispatched Will Smith to get it back.",
-            "You've ventured into the deep void of the internet. 🌌 Watch out for the digital black holes!",
-            "Oops, looks like someone spilled coffee on the motherboard again. ☕ Sparks are flying!",
-            "The matrix has a glitch. 🐈‍⬛ Déjà vu? Try refreshing the page.",
-            "We fired the developer who caused this. Just kidding, we're just making them fix it while they cry. 😭",
-            "This page is playing hide and seek. 🙈 And it's winning."
-        ];
-        
-        document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random() * jokes.length)];
-
-        // Local Preview Mocking (so it doesn't look broken when viewed locally without CF)
-        document.querySelectorAll('.cf-info span').forEach(el => {
-            if(el.innerText.includes('::')) {
-                const token = el.innerText;
-                if(token === '::RAY_ID::') el.innerText = '7x8y9z0a1b2c3d4e';
-                if(token === '::CLIENT_IP::') el.innerText = '127.0.0.1';
-                if(token === '::GEO::') el.innerText = 'Earth, Milky Way';
-                if(token === '::ERROR_MESSAGE::') el.innerText = 'Unknown Anomaly';
-            }
-        });
-        const h1 = document.querySelector('h1');
-        if(h1.innerText === '::ERROR_CODE::') h1.innerText = '502';
     </script>
 </body>
 </html>
