@@ -14,8 +14,12 @@ Because each page has a unique style tailored to a specific error type, you need
 | --- | --- |
 | **WAF Block** (403) | Copy contents of `waf_block.html` |
 | **IP/Country Block** (403) | Copy contents of `ip_block.html` |
+| **IP/Country Challenge** | Copy contents of `ip_challenge.html` |
 | **500 Class Errors** (500, 502, 504) | Copy contents of `500_errors.html` |
 | **1000 Class Errors** (1000, 1001) | Copy contents of `1000_errors.html` |
+| **Interactive Challenge** | Copy contents of `interactive_challenge.html` |
+| **Managed Challenge / I'm Under Attack** | Copy contents of `managed_challenge.html` |
+| **Non-interactive Challenge** | Copy contents of `non_interactive_challenge.html` |
 | **Rate Limiting Block** (429) | Copy contents of `rate_limit.html` |
 
 ### Steps to Apply:

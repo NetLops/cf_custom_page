@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under Attack | DEFCON 1</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #050a05;
+            color: #4af626;
+            font-family: "Courier New", Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .radar-bg {
+            position: absolute;
+            width: 150vw; height: 150vw;
+            background: 
+                linear-gradient(90deg, rgba(74, 246, 38, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(74, 246, 38, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0.3;
+            animation: rotate 20s linear infinite;
+        }
+        .radar-sweep {
+            position: absolute;
+            width: 50%; height: 50%;
+            top: 0; right: 0;
+            background: conic-gradient(from 180deg at 0 100%, transparent 0deg, rgba(74, 246, 38, 0.4) 90deg, #4af626 90deg, transparent 91deg);
+            transform-origin: 0% 100%;
+            animation: rotate 4s linear infinite;
+        }
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        .panel {
+            background: rgba(0, 20, 0, 0.85);
+            border: 2px solid #4af626;
+            box-shadow: 0 0 20px rgba(74, 246, 38, 0.3), inset 0 0 30px rgba(74, 246, 38, 0.1);
+            padding: 40px;
+            width: 500px;
+            max-width: 90vw;
+            z-index: 10;
+            position: relative;
+        }
+        .warning-bar {
+            background: #4af626;
+            color: #000;
+            font-weight: bold;
+            padding: 5px 10px;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            animation: flash 1s infinite alternate;
+        }
+        @keyframes flash {
+            0% { background: #4af626; color: #000; }
+            100% { background: #114411; color: #4af626; }
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+        }
+        .joke {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            border-left: 4px solid #4af626;
+            padding-left: 15px;
+        }
+        .challenge-container {
+            background: #fff;
+            padding: 15px;
+            min-height: 80px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .terminal-lines {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 20px;
+        }
+        .footer {
+            font-size: 0.8rem;
+            border-top: 1px dashed #4af626;
+            padding-top: 15px;
+        }
+        .footer a { color: #fff; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="radar-bg">
+        <div class="radar-sweep"></div>
+    </div>
+    
+    <div class="panel">
+        <div class="warning-bar" id="warning-text">DEFCON 1: UNDER ATTACK</div>
+        
+        <h1 id="title-text">SECURITY CLEARANCE</h1>
+        
+        <div class="joke" id="joke-text"></div>
+        
+        <div class="terminal-lines">
+            > SCANNING ORIGIN: <span class="cf-val">::CLIENT_IP::</span><br>
+            > TRACE ID: <span class="cf-val">::RAY_ID::</span><br>
+            > VERIFYING BIOMETRICS...
+        </div>
+
+        <div class="challenge-container">
+            ::IM_UNDER_ATTACK_BOX::
+        </div>
+        
+        <div class="footer">
+            <span id="footer-text">Commander</span>: <a href="https://github.com/netlops" target="_blank">NetLops</a>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                warning: "DEFCON 1: UNDER ATTACK",
+                title: "SECURITY CLEARANCE",
+                joke: "Air raid siren activated! The site is under heavy fire. Please wait in the bunker while we run a deep scan on your credentials...",
+                footer: "Commander"
+            },
+            zh: {
+                warning: "一级战备：正在遭遇攻击",
+                title: "安全审查中",
+                joke: "防空警报拉响！全站进入一级战备状态。兄弟，外头正打着呢，请在掩体里稍安勿躁，我们正在紧急核验你的成分...",
+                footer: "防线总指挥"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('warning-text').innerText = t.warning;
+        document.getElementById('title-text').innerText = t.title;
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Mocking for local preview
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'CMD-777X';
+                else if(el.innerText.includes('IP')) el.innerText = '127.0.0.1';
+            }
+        });
+        
+        // Mock IM_UNDER_ATTACK box locally
+        const challengeBox = document.querySelector('.challenge-container');
+        if (challengeBox.innerHTML.includes('::IM_UNDER_ATTACK_BOX::')) {
+            challengeBox.innerHTML = '<div style="color: #333; font-family: sans-serif; font-size: 0.9rem;">[ Cloudflare Under Attack Widget Will Render Here ]</div>';
+        }
+    </script>
+</body>
+</html>

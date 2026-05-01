@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigating...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #e5e0d8;
+            background-image: radial-gradient(#666 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Special Elite', cursive, monospace;
+            color: #2c2c2c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .case-file {
+            background: #fdfbf7;
+            padding: 40px;
+            width: 550px;
+            max-width: 90vw;
+            box-shadow: 10px 10px 15px rgba(0,0,0,0.1), inset 0 0 50px rgba(150, 140, 120, 0.2);
+            position: relative;
+            transform: rotate(1deg);
+        }
+        .case-file::before {
+            content: "CONFIDENTIAL";
+            position: absolute;
+            top: 20px; right: 20px;
+            color: #a00;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border: 3px solid #a00;
+            padding: 5px 10px;
+            transform: rotate(15deg);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .photo-clip {
+            position: absolute;
+            top: -15px; left: 40%;
+            width: 80px; height: 30px;
+            background: #ccc;
+            border: 1px solid #999;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(-3deg);
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin: 0 0 20px 0;
+            border-bottom: 2px solid #2c2c2c;
+            padding-bottom: 10px;
+        }
+        .joke {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .challenge-container {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            min-height: 80px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .footer {
+            font-size: 0.8rem;
+            text-align: right;
+            margin-top: 30px;
+        }
+        .footer a { color: #a00; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="case-file">
+        <div class="photo-clip"></div>
+        
+        <h1 id="title-text">CASE #<span class="cf-val">::RAY_ID::</span></h1>
+        
+        <div class="joke" id="joke-text"></div>
+        
+        <div class="challenge-container">
+            ::IM_UNDER_ATTACK_BOX::
+        </div>
+        
+        <div class="details">
+            <div>SUBJECT IP: <span class="cf-val">::CLIENT_IP::</span></div>
+            <div>STATUS: Pending Review</div>
+        </div>
+
+        <div class="footer">
+            <span id="footer-text">Chief Inspector</span>: <a href="https://github.com/netlops" target="_blank">NetLops</a>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                joke: "A dark and stormy night... The inspector is currently examining your digital footprints with a magnifying glass. Don't move, we'll clear you in a moment.",
+                footer: "Chief Inspector"
+            },
+            zh: {
+                joke: "夜黑风高，你这行踪有些诡异啊... 探长正拿着放大镜仔细端详你的数字指纹。别动，正在自动核验，马上就好。",
+                footer: "总探长"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Mocking for local preview
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'NOIR-882';
+                else if(el.innerText.includes('IP')) el.innerText = '127.0.0.1';
+            }
+        });
+        
+        // Mock IM_UNDER_ATTACK box locally
+        const challengeBox = document.querySelector('.challenge-container');
+        if (challengeBox.innerHTML.includes('::IM_UNDER_ATTACK_BOX::')) {
+            challengeBox.innerHTML = '<div style="color: #666; font-family: sans-serif;">[ Cloudflare Non-Interactive Widget Will Render Here ]</div>';
+        }
+    </script>
+</body>
+</html>

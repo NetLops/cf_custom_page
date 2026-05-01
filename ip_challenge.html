@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Challenge | Wanted</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #8b5a2b;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(0,0,0,0.1) 48px, rgba(0,0,0,0.1) 50px), 
+                              repeating-linear-gradient(0deg, transparent, transparent 48px, rgba(0,0,0,0.1) 48px, rgba(0,0,0,0.1) 50px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Rye', cursive;
+            color: #3e2723;
+        }
+        .poster {
+            background-color: #f4e4bc;
+            background-image: radial-gradient(circle, transparent 20%, #e0c897 100%);
+            width: 500px;
+            max-width: 90vw;
+            padding: 40px 30px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.5), inset 0 0 50px rgba(139,69,19,0.3);
+            border: 2px solid #8b4513;
+            text-align: center;
+            position: relative;
+            transform: rotate(-2deg);
+        }
+        .poster::before, .poster::after {
+            content: '';
+            position: absolute;
+            width: 20px; height: 20px;
+            background: radial-gradient(circle, #555 30%, #222 100%);
+            border-radius: 50%;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .poster::before { top: 15px; left: 15px; }
+        .poster::after { top: 15px; right: 15px; }
+        h1 {
+            font-size: 4rem;
+            margin: 0 0 10px 0;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+        h2 {
+            font-size: 1.5rem;
+            margin: 0 0 30px 0;
+            font-weight: normal;
+        }
+        .joke {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .captcha-container {
+            background: #fff;
+            padding: 20px;
+            min-height: 80px;
+            border: 2px dashed #8b4513;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .info {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #555;
+            text-align: left;
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.8rem;
+        }
+        .footer a { color: #8b4513; font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="poster">
+        <h1 id="title-text">WANTED</h1>
+        <h2 id="subtitle-text">A Human to Prove It</h2>
+        
+        <div class="joke" id="joke-text"></div>
+        
+        <div class="captcha-container">
+            ::CAPTCHA_BOX::
+        </div>
+        
+        <div class="info">
+            IP: <span class="cf-val">::CLIENT_IP::</span><br>
+            Ray ID: <span class="cf-val">::RAY_ID::</span>
+        </div>
+        
+        <div class="footer">
+            <span id="footer-text">Sheriff</span>: <a href="https://github.com/netlops" target="_blank">NetLops</a>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                title: "WANTED",
+                subtitle: "A Human to Prove It",
+                joke: "Halt, stranger! You look mighty suspicious around these parts. Prove you ain't a cold piece of machinery.",
+                footer: "Sheriff"
+            },
+            zh: {
+                title: "通缉令",
+                subtitle: "悬赏一名大活人",
+                joke: "站住！外乡人，快对暗号！你这走位也太像个没得感情的爬虫机器了，赶紧把下面的验证码解了，证明你是良民！",
+                footer: "西部警长"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('title-text').innerText = t.title;
+        document.getElementById('subtitle-text').innerText = t.subtitle;
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Mocking for local preview
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'WANTED-999';
+                else if(el.innerText.includes('IP')) el.innerText = '127.0.0.1';
+            }
+        });
+        
+        // Mock CAPTCHA box locally
+        const captchaBox = document.querySelector('.captcha-container');
+        if (captchaBox.innerHTML.includes('::CAPTCHA_BOX::')) {
+            captchaBox.innerHTML = '<div style="color: #666; font-family: sans-serif;">[ Cloudflare Captcha Widget Will Render Here ]</div>';
+        }
+    </script>
+</body>
+</html>

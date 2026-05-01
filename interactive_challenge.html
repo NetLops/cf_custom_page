@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Challenge | ARCADE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #111;
+            background-image: linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Press Start 2P', monospace;
+            color: #0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .scanlines {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .container {
+            text-align: center;
+            width: 600px;
+            max-width: 90vw;
+            z-index: 5;
+            animation: crt-flicker 0.15s infinite;
+        }
+        @keyframes crt-flicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+        h1 {
+            color: #ff00ff;
+            text-shadow: 2px 2px 0px #00ffff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .joke {
+            font-size: 0.8rem;
+            line-height: 1.8;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+        .captcha-container {
+            background: #fff;
+            padding: 20px;
+            border: 4px solid #ff00ff;
+            box-shadow: 5px 5px 0px #00ffff;
+            margin-bottom: 40px;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        .stats {
+            font-size: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.6rem;
+        }
+        .footer a { color: #00ffff; text-decoration: none; }
+        .footer a:hover { color: #ff00ff; }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="container">
+        <h1 id="title-text">PLAYER 1 START</h1>
+        
+        <div class="joke" id="joke-text"></div>
+        
+        <div class="captcha-container">
+            ::CAPTCHA_BOX::
+        </div>
+        
+        <div class="blink" style="color: yellow; font-size: 0.8rem;" id="insert-coin-text">
+            INSERT COIN TO CONTINUE...
+        </div>
+        
+        <div class="stats">
+            <div>IP: <span class="cf-val">::CLIENT_IP::</span></div>
+            <div>SCORE: 00000</div>
+            <div>RAY: <span class="cf-val">::RAY_ID::</span></div>
+        </div>
+
+        <div class="footer">
+            <span id="footer-text">Game Dev</span>: <a href="https://github.com/netlops" target="_blank">NetLops</a>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                title: "PLAYER 1 START",
+                joke: "A wild Security Check appeared! Please clear this Captcha mini-game to unlock the next level and proceed to your destination.",
+                insert: "INSERT COIN TO CONTINUE...",
+                footer: "Game Dev"
+            },
+            zh: {
+                title: "准备迎战",
+                joke: "正在载入游戏币... 野生的验证码兽跳出来了！大侠，请施展你的鼠标绝技通关这个小游戏，马上就能解锁下一关！",
+                insert: "请投币继续游戏...",
+                footer: "首席策划"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('title-text').innerText = t.title;
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('insert-coin-text').innerText = t.insert;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Mocking for local preview
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'LVL-99';
+                else if(el.innerText.includes('IP')) el.innerText = '127.0.0.1';
+            }
+        });
+        
+        // Mock CAPTCHA box locally
+        const captchaBox = document.querySelector('.captcha-container');
+        if (captchaBox.innerHTML.includes('::CAPTCHA_BOX::')) {
+            captchaBox.innerHTML = '<div style="color: #333; font-family: sans-serif; font-size: 0.8rem;">[ Cloudflare Captcha Widget Will Render Here ]</div>';
+        }
+    </script>
+</body>
+</html>
