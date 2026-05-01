@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Border Block | ::ERROR_CODE::</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #f1f0ea; /* Paper texture */
+            background-image: 
+                radial-gradient(#ccc 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #333;
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .passport-page {
+            background: #fff;
+            border: 1px solid #ccc;
+            width: 600px;
+            height: 800px;
+            max-width: 90vw;
+            max-height: 90vh;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            box-sizing: border-box;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 19px, #e8e8e8 20px);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        h1 { margin: 0; font-size: 1.5rem; }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #aaa;
+            padding-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        .data-label {
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+        }
+        .data-val {
+            font-family: monospace;
+            color: #000;
+        }
+        .stamp-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .stamp {
+            border: 8px solid #c0392b;
+            color: #c0392b;
+            font-size: 4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transform: rotate(-15deg) scale(5);
+            opacity: 0;
+            animation: stampIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: 0.5s;
+            mix-blend-mode: multiply;
+        }
+        @keyframes stampIn {
+            0% { transform: rotate(-15deg) scale(5); opacity: 0; }
+            100% { transform: rotate(-15deg) scale(1); opacity: 0.8; }
+        }
+        .joke {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #555;
+            font-style: italic;
+        }
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="passport-page">
+        <div class="header">
+            <h1 id="title-text">Immigration Control / Security Check</h1>
+        </div>
+        
+        <div class="data-row">
+            <span class="data-label" id="lbl-ip">Traveler IP</span>
+            <span class="data-val cf-val">::CLIENT_IP::</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label" id="lbl-geo">Origin Region</span>
+            <span class="data-val cf-val">::GEO::</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label" id="lbl-ray">Visa ID (Ray ID)</span>
+            <span class="data-val cf-val">::RAY_ID::</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label" id="lbl-status">Remarks</span>
+            <span class="data-val cf-val">::ERROR_MESSAGE::</span>
+        </div>
+        
+        <div class="joke" id="joke-text"></div>
+        
+        <div class="stamp-container">
+            <div class="stamp" id="stamp-text">ACCESS DENIED</div>
+        </div>
+        
+        <div class="footer" id="footer-text">
+            Border Control Agent: NetLops
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                title: "Immigration Control / Security Check",
+                ip: "Traveler IP", geo: "Origin Region", ray: "Visa ID (Ray)", status: "Remarks",
+                stamp: "ACCESS DENIED",
+                joke: "Your region is not allowed to cross this border. Please check your travel documents.",
+                footer: "Border Control Agent: NetLops"
+            },
+            zh: {
+                title: "海关安检 / 边境控制",
+                ip: "旅客 IP", geo: "来源地盘", ray: "签证编号", status: "拦截备注",
+                stamp: "禁止入境",
+                joke: "此路是我开，此树是我栽。兄弟，你这地界的 IP 咱村不让进啊，赶紧用个魔法工具吧！",
+                footer: "边防大队：NetLops"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('title-text').innerText = t.title;
+        document.getElementById('lbl-ip').innerText = t.ip;
+        document.getElementById('lbl-geo').innerText = t.geo;
+        document.getElementById('lbl-ray').innerText = t.ray;
+        document.getElementById('lbl-status').innerText = t.status;
+        document.getElementById('stamp-text').innerText = t.stamp;
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Mocking
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'PASS-12345';
+                else if(el.innerText.includes('IP')) el.innerText = '123.45.67.89';
+                else if(el.innerText.includes('GEO')) el.innerText = 'Restricted Area';
+                else el.innerText = 'COUNTRY_BLOCKED';
+            }
+        });
+    </script>
+</body>
+</html>

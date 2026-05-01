@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Error | ::ERROR_CODE::</title>
+    <!-- Use a handwriting font to look like a blueprint sketch -->
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #1a5276; /* Blueprint blue */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+            color: #fff;
+            font-family: 'Architects Daughter', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .sketch-box {
+            background: rgba(26, 82, 118, 0.8);
+            border: 3px solid #fff;
+            border-radius: 2px 255px 3px 25px / 255px 5px 225px 3px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 5px 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        h1 {
+            font-size: 5rem;
+            margin: 0;
+            text-align: center;
+            border-bottom: 2px dashed #fff;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .joke {
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 20px 0;
+            color: #d4e6f1;
+        }
+        ul.specs {
+            list-style: none;
+            padding: 0;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        ul.specs li {
+            margin-bottom: 10px;
+            border-bottom: 1px dotted rgba(255,255,255,0.5);
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 10px;
+            border: 2px solid #fff;
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: #fff;
+            color: #1a5276;
+            transform: scale(1.05);
+        }
+        .stamp {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            border: 4px solid #e74c3c;
+            color: #e74c3c;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            padding: 5px 10px;
+            transform: rotate(15deg);
+            border-radius: 5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="sketch-box">
+        <div class="stamp" id="stamp-text">REJECTED</div>
+        <h1 id="err-code">::ERROR_CODE::</h1>
+        <h2 id="title-text">Configuration Draft Failed</h2>
+        
+        <p class="joke" id="joke-text"></p>
+        
+        <ul class="specs">
+            <li><span id="lbl-ray">Ray ID:</span> <span class="val">::RAY_ID::</span></li>
+            <li><span id="lbl-ip">Your IP:</span> <span class="val">::CLIENT_IP::</span></li>
+            <li><span id="lbl-geo">Location:</span> <span class="val">::GEO::</span></li>
+            <li><span id="lbl-status">Status:</span> <span class="val">::ERROR_MESSAGE::</span></li>
+        </ul>
+        
+        <a href="javascript:location.reload();" class="btn" id="btn-refresh">Redraw Plan</a>
+        
+        <div class="footer" id="footer-text">
+            Architect: NetLops
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                title: "Configuration Draft Failed",
+                stamp: "REJECTED",
+                joke: "The foreman held the blueprints upside down. We're currently scolding him. Please stand by while we redraw.",
+                ray: "Ray ID", ip: "Client IP", geo: "Location", status: "Error",
+                btn: "Redraw Plan",
+                footer: "Architect: NetLops"
+            },
+            zh: {
+                title: "图纸配置严重错误",
+                stamp: "打回重做",
+                joke: "包工头把 Cloudflare 图纸拿反了！配置写错了，老板正在拿皮带抽他，稍等重新发版。",
+                ray: "图纸溯源", ip: "你的门牌", geo: "施工地段", status: "错误信息",
+                btn: "重新画图",
+                footer: "总设计师: NetLops"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('title-text').innerText = t.title;
+        document.getElementById('stamp-text').innerText = t.stamp;
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('lbl-ray').innerText = t.ray;
+        document.getElementById('lbl-ip').innerText = t.ip;
+        document.getElementById('lbl-geo').innerText = t.geo;
+        document.getElementById('lbl-status').innerText = t.status;
+        document.getElementById('btn-refresh').innerText = t.btn;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Mocking
+        document.querySelectorAll('.val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'PLAN-X9F';
+                else if(el.innerText.includes('IP')) el.innerText = '127.0.0.1';
+                else if(el.innerText.includes('GEO')) el.innerText = 'Site A';
+                else el.innerText = 'DNS_RESOLUTION_FAILED';
+            }
+        });
+        
+        let code = document.getElementById('err-code');
+        if(code.innerText.includes('::ERROR_CODE::')) {
+            code.innerText = '1001';
+        }
+    </script>
+</body>
+</html>

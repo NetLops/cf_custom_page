@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Limited | ::ERROR_CODE::</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            flex-direction: column;
+            animation: gradientShift 10s ease infinite;
+            background-size: 200% 200%;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .breathing-circle {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 40px rgba(255,255,255,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: #555;
+            animation: breathe 8s ease-in-out infinite;
+            margin-bottom: 40px;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+            50% { transform: scale(1.5); box-shadow: 0 0 60px rgba(255,255,255,0.8); }
+        }
+        .text-content {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        h1 { margin: 0 0 10px 0; font-weight: 300; font-size: 2.5rem; }
+        .joke {
+            font-size: 1.2rem;
+            color: #444;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .info span {
+            margin: 5px 10px;
+            background: rgba(255,255,255,0.5);
+            padding: 5px 10px;
+            border-radius: 50px;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 30px;
+            background: #fff;
+            color: #7ba2e8;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="breathing-circle" id="breathe-text">Inhale</div>
+    
+    <div class="text-content">
+        <h1 id="title-text">Rate Limited</h1>
+        
+        <div class="joke" id="joke-text"></div>
+        
+        <div class="info">
+            <span>ID: <span class="cf-val">::RAY_ID::</span></span>
+            <span>IP: <span class="cf-val">::CLIENT_IP::</span></span>
+            <span>Status: <span class="cf-val">::ERROR_CODE::</span></span>
+        </div>
+        
+        <a href="javascript:location.reload();" class="btn" id="btn-refresh">Refresh Gently</a>
+    </div>
+    
+    <div class="footer" id="footer-text">
+        Zen Master: NetLops
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                title: "Rate Limited",
+                joke: "You're clicking too fast! Take a deep breath, count to three, and let the servers catch up with your incredible speed.",
+                btn: "Refresh Gently",
+                footer: "Zen Master: NetLops",
+                breatheIn: "Inhale", breatheOut: "Exhale"
+            },
+            zh: {
+                title: "哎哟，太快了",
+                joke: "小伙子手速太快了，把鼠标都点冒烟了，服务器直呼受不了。来，喝口茶，跟着上面的圆圈深呼吸三次再试...",
+                btn: "温柔地刷新",
+                footer: "首席按摩师：NetLops",
+                breatheIn: "吸气", breatheOut: "呼气"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('title-text').innerText = t.title;
+        document.getElementById('joke-text').innerText = t.joke;
+        document.getElementById('btn-refresh').innerText = t.btn;
+        document.getElementById('footer-text').innerText = t.footer;
+
+        // Breathe logic
+        const circleText = document.getElementById('breathe-text');
+        circleText.innerText = t.breatheIn;
+        setInterval(() => {
+            circleText.innerText = circleText.innerText === t.breatheIn ? t.breatheOut : t.breatheIn;
+        }, 4000);
+
+        // Mocking
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = 'ZEN-888';
+                else if(el.innerText.includes('IP')) el.innerText = '10.0.0.1';
+                else el.innerText = '429';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAF Blocked | ::ERROR_CODE::</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #050505;
+            color: #33ff00;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        .crt::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        .container {
+            padding: 40px;
+            box-sizing: border-box;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 4rem;
+            margin: 0 0 20px 0;
+            text-shadow: 0 0 10px #33ff00;
+        }
+        .typewriter {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            white-space: pre-wrap;
+        }
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 1.2em;
+            background-color: #33ff00;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 30px;
+            border: 1px solid #33ff00;
+        }
+        .table th, .table td {
+            border: 1px solid #33ff00;
+            padding: 10px;
+            text-align: left;
+        }
+        .table th { background: rgba(51, 255, 0, 0.2); }
+        .btn {
+            background: transparent;
+            color: #33ff00;
+            border: 1px solid #33ff00;
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #33ff00;
+            color: #000;
+            box-shadow: 0 0 15px #33ff00;
+        }
+    </style>
+</head>
+<body class="crt">
+    <div class="container">
+        <h1 id="err-title">ACCESS DENIED_</h1>
+        <div class="typewriter" id="typewriter-text"></div><span class="cursor"></span>
+        
+        <table class="table" id="info-table" style="opacity: 0;">
+            <tr>
+                <th id="lbl-ray">Ray ID</th>
+                <td class="cf-val">::RAY_ID::</td>
+            </tr>
+            <tr>
+                <th id="lbl-ip">Client IP</th>
+                <td class="cf-val">::CLIENT_IP::</td>
+            </tr>
+            <tr>
+                <th id="lbl-geo">Location</th>
+                <td class="cf-val">::GEO::</td>
+            </tr>
+            <tr>
+                <th id="lbl-status">Rule Triggered</th>
+                <td class="cf-val">::ERROR_MESSAGE::</td>
+            </tr>
+        </table>
+        
+        <div style="opacity: 0;" id="action-area">
+            <a href="javascript:location.reload();" class="btn" id="btn-back">Initialize Retreat Sequence</a>
+            <p style="margin-top: 40px; font-size: 0.8rem; color: #1a8000;" id="lbl-footer">SYSTEM.AUTHOR = "NetLops";</p>
+        </div>
+    </div>
+
+    <script>
+        const i18n = {
+            en: {
+                msg: "WARNING: Unauthorized intrusion detected.\nFirewall security protocols engaged.\nYour activity has been flagged as suspicious.\nPlease step away from the keyboard.",
+                ray: "Trace ID", ip: "Source IP", geo: "Origin", status: "Trigger",
+                btn: "Initialize Retreat Sequence"
+            },
+            zh: {
+                msg: "警告：站住！防火墙保安大爷把你拦下了。\n系统判定你这敲键盘的姿势太像黑客了。\n请立刻出示良民证，否则关门放狗！",
+                ray: "追踪单号", ip: "你的门牌号", geo: "所属地盘", status: "触发规则",
+                btn: "溜了溜了，返回重试"
+            }
+        };
+
+        const lang = (navigator.language || navigator.userLanguage).toLowerCase().includes('zh') ? 'zh' : 'en';
+        const t = i18n[lang];
+
+        document.getElementById('lbl-ray').innerText = t.ray;
+        document.getElementById('lbl-ip').innerText = t.ip;
+        document.getElementById('lbl-geo').innerText = t.geo;
+        document.getElementById('lbl-status').innerText = t.status;
+        document.getElementById('btn-back').innerText = t.btn;
+
+        // Mocking
+        document.querySelectorAll('.cf-val').forEach(el => {
+            if(el.innerText.includes('::')) {
+                if(el.innerText.includes('RAY')) el.innerText = '0x' + Math.random().toString(16).substr(2, 8).toUpperCase();
+                else if(el.innerText.includes('IP')) el.innerText = '192.168.1.HACK';
+                else if(el.innerText.includes('GEO')) el.innerText = 'Unknown Sector';
+                else el.innerText = 'WAF_RULE_VIOLATION';
+            }
+        });
+        
+        let title = document.getElementById('err-title');
+        if(title.innerText.includes('::ERROR_CODE::')) {
+            title.innerText = 'ACCESS DENIED_';
+        }
+
+        // Typewriter effect
+        const text = t.msg;
+        const target = document.getElementById('typewriter-text');
+        let index = 0;
+
+        function typeWriter() {
+            if (index < text.length) {
+                target.innerHTML += text.charAt(index) === '\n' ? '<br>' : text.charAt(index);
+                index++;
+                setTimeout(typeWriter, 30);
+            } else {
+                document.getElementById('info-table').style.transition = 'opacity 1s';
+                document.getElementById('info-table').style.opacity = '1';
+                setTimeout(() => {
+                    document.getElementById('action-area').style.transition = 'opacity 1s';
+                    document.getElementById('action-area').style.opacity = '1';
+                }, 500);
+            }
+        }
+        setTimeout(typeWriter, 500);
+    </script>
+</body>
+</html>
