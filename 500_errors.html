@@ -287,8 +287,8 @@
             if(el.innerText.includes('::')) {
                 const token = el.innerText;
                 if(token === '::RAY_ID::') el.innerText = '7x8y9z0a1b2c3d4e';
-                if(token === '::CLIENT_IP::') el.innerText = '127.0.0.1';
-                if(token === '::GEO::') el.innerText = 'Earth, Milky Way';
+                
+                
                 if(token === '::ERROR_MESSAGE::') el.innerText = 'Unknown Anomaly';
             }
         });
@@ -451,6 +451,21 @@
 
         init();
         animate();
+    
+        // Dynamic IP & Geo Fetching for Preview / Local
+        const ipEls = Array.from(document.querySelectorAll('.val, span, .cf-val')).filter(el => el.innerText.includes('::CLIENT_IP::') || el.innerText === '127.0.0.1' || el.innerText === '192.168.1.HACK' || el.innerText === '123.45.67.89' || el.innerText === '10.0.0.1');
+        const geoEls = Array.from(document.querySelectorAll('.val, span, .cf-val')).filter(el => el.innerText.includes('::GEO::') || el.innerText === 'Earth, Milky Way' || el.innerText === 'Site A' || el.innerText === 'Restricted Area' || el.innerText === 'Unknown Sector' || el.innerText === 'DE');
+        
+        if (ipEls.length > 0 || geoEls.length > 0) {
+            fetch('https://get.geojs.io/v1/ip/geo.json')
+                .then(r => r.json())
+                .then(data => {
+                    ipEls.forEach(el => el.innerText = data.ip);
+                    geoEls.forEach(el => el.innerText = data.country_code || data.country);
+                })
+                .catch(e => console.log('Mock IP fetch failed'));
+        }
+
     </script>
     <div style="display: none; visibility: hidden; width: 0; height: 0;">::CLOUDFLARE_ERROR_500S_BOX::</div>
 </body>

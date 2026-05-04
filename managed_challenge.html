@@ -155,7 +155,7 @@
         document.querySelectorAll('.cf-val').forEach(el => {
             if(el.innerText.includes('::')) {
                 if(el.innerText.includes('RAY')) el.innerText = 'CMD-777X';
-                else if(el.innerText.includes('IP')) el.innerText = '127.0.0.1';
+                
             }
         });
         
@@ -164,6 +164,21 @@
         if (challengeBox.innerHTML.includes('::CAPTCHA_BOX::')) {
             challengeBox.innerHTML = '<div style="color: #333; font-family: sans-serif; font-size: 0.9rem;">[ Cloudflare Under Attack Widget Will Render Here ]</div>';
         }
+    
+        // Dynamic IP & Geo Fetching for Preview / Local
+        const ipEls = Array.from(document.querySelectorAll('.val, span, .cf-val')).filter(el => el.innerText.includes('::CLIENT_IP::') || el.innerText === '127.0.0.1' || el.innerText === '192.168.1.HACK' || el.innerText === '123.45.67.89' || el.innerText === '10.0.0.1');
+        const geoEls = Array.from(document.querySelectorAll('.val, span, .cf-val')).filter(el => el.innerText.includes('::GEO::') || el.innerText === 'Earth, Milky Way' || el.innerText === 'Site A' || el.innerText === 'Restricted Area' || el.innerText === 'Unknown Sector' || el.innerText === 'DE');
+        
+        if (ipEls.length > 0 || geoEls.length > 0) {
+            fetch('https://get.geojs.io/v1/ip/geo.json')
+                .then(r => r.json())
+                .then(data => {
+                    ipEls.forEach(el => el.innerText = data.ip);
+                    geoEls.forEach(el => el.innerText = data.country_code || data.country);
+                })
+                .catch(e => console.log('Mock IP fetch failed'));
+        }
+
     </script>
 </body>
 </html>
